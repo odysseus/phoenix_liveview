@@ -1,12 +1,13 @@
 defmodule PentoWeb.WrongLive do
   use Phoenix.LiveView, layout: {PentoWeb.LayoutView, "live.html"}
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     {:ok,
      assign(socket,
        correct: 0,
        attempts: 0,
-       message: "Make a guess:"
+       message: "Make a guess:",
+       session_id: session["live_socket_id"]
      )}
   end
 
@@ -48,6 +49,10 @@ defmodule PentoWeb.WrongLive do
         <a href="#" phx-click="guess" phx-value-number= {n} ><%= n %></a>
       <% end %>
     </h2>
+    <pre>
+      Current user: <%= @current_user.email %>
+      Session ID:   <%= @session_id %>
+    </pre>
     """
   end
 end
