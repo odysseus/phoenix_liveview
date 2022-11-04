@@ -4,19 +4,17 @@ defmodule Pento.AccountsFixtures do
   entities via the `Pento.Accounts` context.
   """
 
-  def unique_user_email(id \\ System.unique_integer()), do: "user#{id}@example.com"
+  def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password(), do: "Exampl3P4ssw0rd!"
   def valid_password_reset(), do: "An0th3rV4lidP@ssword"
-  def valid_username(id \\ System.unique_integer()), do: "user#{id}"
+  def valid_username, do: "user#{System.unique_integer()}"
 
   def valid_user_attributes(attrs \\ %{}) do
-    id = System.unique_integer()
-
     Enum.into(attrs, %{
-      email: unique_user_email(id),
+      email: unique_user_email(),
       password: valid_user_password(),
       password_confirmation: valid_user_password(),
-      username: valid_username(id)
+      username: valid_username()
     })
   end
 
