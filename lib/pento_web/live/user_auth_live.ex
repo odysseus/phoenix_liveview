@@ -6,10 +6,10 @@ defmodule PentoWeb.UserAuthLive do
     %{"user_token" => user_token} = session
 
     socket =
-      assign(
+      assign_new(
         socket,
         :current_user,
-        Accounts.get_user_by_session_token(user_token)
+        fn -> Accounts.get_user_by_session_token(user_token) end
       )
 
     if socket.assigns.current_user do
