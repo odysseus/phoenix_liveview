@@ -6,6 +6,7 @@ defmodule Pento.Accounts.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
+    field :username, :string
     field :confirmed_at, :naive_datetime
 
     timestamps()
@@ -30,9 +31,10 @@ defmodule Pento.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :username, :password])
     |> validate_email()
     |> validate_password(opts)
+    |> validate_username()
   end
 
   defp validate_email(changeset) do
@@ -48,10 +50,20 @@ defmodule Pento.Accounts.User do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
-    # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
-    # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
-    # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+    |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
+    |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
+    |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+    |> validate_confirmation(:password, message: "Passwords must match")
     |> maybe_hash_password(opts)
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 4, max: 16, message: "Username must be 4-16 characters")
+    |> validate_format(:username, ~r/^[a-zA-Z_]+$/, message: "Username must be only letters and underscores")
+    |> unsafe_validate_unique(:username, Pento.Repo)
+    |> unique_constraint(:username)
   end
 
   defp maybe_hash_password(changeset, opts) do
@@ -101,6 +113,13 @@ defmodule Pento.Accounts.User do
     |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
+  end
+
+  def username_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:username])
+    |> validate_confirmation(:username, message: "does not match username")
+    |> validate_username()
   end
 
   @doc """

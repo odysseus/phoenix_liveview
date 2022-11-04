@@ -50,8 +50,9 @@ defmodule PentoWeb.WrongLive do
       <% end %>
     </h2>
     <pre>
-      Current user: <%= @current_user.email %>
-      Session ID:   <%= @session_id %>
+      Current user:  <%= @current_user.username %>
+      User Email:    <%= @current_user.email %>
+      Session ID:    <%= @session_id %>
     </pre>
     """
   end
