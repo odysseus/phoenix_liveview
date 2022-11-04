@@ -6,6 +6,6 @@ defmodule Pento.Repo.Migrations.AddUsernameToUsers do
       add :username, :string, null: false
     end
 
-    create unique_index :users, [:username]
+    create unique_index(:users, [:username])
   end
 end
