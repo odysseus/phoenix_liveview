@@ -1,4 +1,6 @@
-<h1>Listing Products</h1>
+<h1><%= @banner %></h1>
+
+<h2><%= @table_name %></h2>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.product_index_path(@socket, :index)}>

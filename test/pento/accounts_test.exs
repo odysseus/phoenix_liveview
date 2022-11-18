@@ -500,7 +500,9 @@ defmodule Pento.AccountsTest do
     end
 
     test "updates the password", %{user: user} do
-      {:ok, updated_user} = Accounts.reset_user_password(user, %{password: valid_password_reset()})
+      {:ok, updated_user} =
+        Accounts.reset_user_password(user, %{password: valid_password_reset()})
+
       assert is_nil(updated_user.password)
       assert Accounts.get_user_by_email_and_password(user.email, valid_password_reset())
     end
