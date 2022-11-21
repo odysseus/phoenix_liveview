@@ -11,8 +11,8 @@ defmodule Pento.CatalogTest do
     @invalid_attrs %{description: nil, name: nil, sku: nil, unit_price: nil}
 
     test "list_products/0 returns all products" do
-      product = product_fixture()
-      assert Catalog.list_products() == [product]
+      products = all_products_fixture()
+      assert Catalog.list_products() == products
     end
 
     test "get_product!/1 returns the product with given id" do

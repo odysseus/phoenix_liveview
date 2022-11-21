@@ -4,6 +4,9 @@ defmodule Pento.CatalogFixtures do
   entities via the `Pento.Catalog` context.
   """
 
+  alias Pento.Repo
+  alias Pento.Catalog.Product
+
   @doc """
   Generate a unique product sku.
   """
@@ -25,4 +28,30 @@ defmodule Pento.CatalogFixtures do
 
     product
   end
+
+  def all_products_fixture(_attrs \\ %{}) do
+    products = [
+      %{
+        name: "Chess",
+        description: "The medieval strategy game",
+        sku: 5_678_910,
+        unit_price: 10.00
+      },
+      %{
+        name: "Tic-Tac-Toe",
+        description: "The game of Xs and Os",
+        sku: 11_121_314,
+        unit_price: 3.00
+      },
+      %{
+        name: "Table Tennis",
+        description: "Tennis, but table-sized",
+        sku: 15_222_324,
+        unit_price: 12.00
+      }
+    ]
+
+    Enum.map(products, fn %{sku: sku} -> Repo.get_by(Product, sku: sku) end)
+  end
+
 end
