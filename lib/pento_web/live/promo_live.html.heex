@@ -1,0 +1,29 @@
+<h2>Send Your Promo Code to a Friend</h2>
+<h4>
+    Enter your friend's email below and we'll send
+    them a promo code for 10% off their first purchase!
+</h4>
+
+<div>
+    <.form
+      let={f}
+      for={@changeset}
+      id="promo-form"
+      phx-change="validate"
+      phx-submit="save">
+
+    <%= label f, :name %>
+    <%= text_input f, :name, phx_debounce: "blur" %>
+    <%= error_tag f, :name %>
+
+    <%= label f, :email %>
+    <%= text_input f, :email, phx_debounce: "blur" %>
+    <%= error_tag f, :email %>
+
+    <%= label f, :message %>
+    <%= text_input f, :message, phx_debounce: 500 %>
+    <%= error_tag f, :message %>
+
+    <%= submit "Send Promo", phx_disable_with: "Sending promo..." %>
+    </.form>
+</div>

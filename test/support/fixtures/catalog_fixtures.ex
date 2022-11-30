@@ -53,5 +53,4 @@ defmodule Pento.CatalogFixtures do
 
     Enum.map(products, fn %{sku: sku} -> Repo.get_by(Product, sku: sku) end)
   end
-
 end
