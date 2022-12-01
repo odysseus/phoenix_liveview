@@ -79,7 +79,6 @@ defmodule PentoWeb.ProductLive.FormComponent do
           socket,
           entry,
           &upload_static_file(&1, socket)
-          # &upload_image_file(Map.put(&1, :type, entry.client_type), socket)
         )
 
       {:noreply,
@@ -95,21 +94,6 @@ defmodule PentoWeb.ProductLive.FormComponent do
     dest = Path.join("priv/static/uploads", Path.basename(path))
     File.cp!(path, dest)
     {:ok, {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}}
-  end
-
-  defp upload_image_file(%{path: path, type: ctype}, socket) do
-    ext =
-      case ctype do
-        "image/jpeg" -> ".jpg"
-        "image/png" -> ".png"
-      end
-
-    dest = Path.join("priv/static/uploads", Path.basename(path) <> ext)
-    File.cp!(path, dest)
-    route = Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")
-    dbg()
-
-    {:ok, {:ok, route}}
   end
 
   def upload_image_error(%{image: %{errors: errors}}, entry)
