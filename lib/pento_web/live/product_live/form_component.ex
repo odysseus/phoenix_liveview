@@ -67,7 +67,7 @@ defmodule PentoWeb.ProductLive.FormComponent do
   end
 
   defp product_params(socket, params) do
-    Map.put(params, "image_upload", socket.assigns.image_upload)
+    Map.put(params, "image_upload", socket.assigns[:image_upload])
   end
 
   defp handle_progress(:image, entry, socket) do
