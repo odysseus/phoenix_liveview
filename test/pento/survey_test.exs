@@ -15,6 +15,8 @@ defmodule Pento.SurveyTest do
 
   describe "demographics" do
     alias Pento.Survey.Demographic
+    alias Pento.Repo
+    alias Pento.Survey
 
     import Pento.SurveyFixtures
 
@@ -69,6 +71,13 @@ defmodule Pento.SurveyTest do
     test "change_demographic/1 returns a demographic changeset" do
       demographic = demographic_fixture()
       assert %Ecto.Changeset{} = Survey.change_demographic(demographic)
+    end
+
+    test "only allows one demographic per user", %{user: user} do
+      Survey.create_demographic(%{gender: "nonbinary", year_of_birth: 1991, user_id: user.id})
+
+      assert {:error, %Ecto.Changeset{valid?: false}} =
+               Survey.create_demographic(%{year_of_birth: 1992, user_id: user.id})
     end
   end
 
@@ -125,6 +134,22 @@ defmodule Pento.SurveyTest do
     test "change_rating/1 returns a rating changeset" do
       rating = rating_fixture()
       assert %Ecto.Changeset{} = Survey.change_rating(rating)
+    end
+  end
+
+  describe "demographic queries" do
+    alias Pento.Survey
+    import Pento.SurveyFixtures
+
+    setup [:create_user]
+
+    test "for_user/2 returns the proper demographic", %{user: user} do
+      demographic =
+        demographic_fixture(%{gender: "female", year_of_birth: 1995, user_id: user.id})
+
+      retrieved = Survey.get_demographic_by_user(user)
+
+      assert demographic.user_id == retrieved.user_id
     end
   end
 end
