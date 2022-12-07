@@ -15,7 +15,6 @@ defmodule Pento.SurveyTest do
 
   describe "demographics" do
     alias Pento.Survey.Demographic
-    alias Pento.Repo
     alias Pento.Survey
 
     import Pento.SurveyFixtures
