@@ -27,7 +27,9 @@ defmodule PentoWeb.ProductLive.FormComponent do
       |> Catalog.change_product(product_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(changeset: changeset)}
   end
 
   def handle_event("save", %{"product" => product_params}, socket) do

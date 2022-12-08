@@ -28,9 +28,14 @@ defmodule PentoWeb.DemographicLive.Form do
   end
 
   def handle_event("validate", %{"demographic" => demographic_params}, socket) do
-    IO.puts(~S|DemographicLive.Form.handle_event("validate"):|)
-    IO.inspect(demographic_params)
-    {:noreply, socket}
+    changeset =
+      %Demographic{}
+      |> Survey.change_demographic(demographic_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply,
+     socket
+     |> assign(changeset: changeset)}
   end
 
   defp save_demographic(socket, demographic_params) do
