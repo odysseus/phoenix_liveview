@@ -107,8 +107,32 @@ defmodule Pento.Catalog do
     |> Repo.all()
   end
 
-  def products_with_average_ratings do
+  def products_with_average_ratings(%{
+        age_group_filter: age_group_filter
+      }) do
     Product.Query.with_average_ratings()
+    |> Product.Query.join_users()
+    |> Product.Query.join_demographics()
+    |> Product.Query.filter_by_age_group(age_group_filter)
     |> Repo.all()
+  end
+
+  def all_product_names() do
+    Product.Query.all_product_names()
+    |> Repo.all()
+  end
+
+  def all_products_with_average_ratings(params) do
+    names = all_product_names()
+
+    average =
+      products_with_average_ratings(params)
+      |> Enum.into(%{})
+
+    Enum.map(names, fn name -> {name, average[name] || 0} end)
+  end
+
+  def get_valid_age_ranges() do
+    Product.Query.valid_age_ranges()
   end
 end
