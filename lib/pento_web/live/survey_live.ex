@@ -1,9 +1,9 @@
 defmodule PentoWeb.SurveyLive do
   use PentoWeb, :live_view
-  alias PentoWeb.DemographicLive
-  alias Pento.Survey
-  alias Pento.Catalog
-  alias PentoWeb.RatingLive
+  alias PentoWeb.{DemographicLive, RatingLive, Endpoint}
+  alias Pento.{Survey, Catalog}
+
+  @survey_results_topic "survey_results"
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -54,6 +54,12 @@ defmodule PentoWeb.SurveyLive do
         updated_product,
         product_index
       ) do
+    Endpoint.broadcast(
+      @survey_results_topic,
+      "rating_created",
+      %{}
+    )
+
     socket
     |> put_flash(:info, "Rating submitted successfully")
     |> assign(
