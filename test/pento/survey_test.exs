@@ -5,14 +5,6 @@ defmodule Pento.SurveyTest do
   import Pento.CatalogFixtures
   import Pento.AccountsFixtures
 
-  defp create_user(_) do
-    %{user: user_fixture()}
-  end
-
-  defp create_product(_) do
-    %{product: product_fixture()}
-  end
-
   describe "demographics" do
     alias Pento.Survey.Demographic
     alias Pento.Survey

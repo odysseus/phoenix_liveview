@@ -21,6 +21,18 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     |> assign_chart_svg()
   end
 
+  def handle_event(
+        "age_group_filter",
+        %{"age_group_filter" => age_group_filter},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> assign_age_group_filter(age_group_filter)
+     |> assign_products_with_average_ratings()
+     |> update_chart()}
+  end
+
   defp assign_dataset(
          %{
            assigns: %{
@@ -50,7 +62,7 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     |> assign(:chart, make_bar_chart(dataset))
   end
 
-  def assign_chart_svg(%{assigns: %{chart: chart}} = socket) do
+  defp assign_chart_svg(%{assigns: %{chart: chart}} = socket) do
     params = %{
       chart: chart,
       title: "Product Ratings",
@@ -63,29 +75,17 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     |> assign(:chart_svg, render_bar_chart(params))
   end
 
-  def assign_age_group_filter(socket, filter) do
+  defp assign_age_group_filter(socket, filter) do
     socket
     |> assign(:age_group_filter, filter)
   end
 
-  def assign_age_group_filter(%{assigns: %{age_group_filter: _}} = socket) do
+  defp assign_age_group_filter(%{assigns: %{age_group_filter: _}} = socket) do
     socket
   end
 
-  def assign_age_group_filter(socket) do
+  defp assign_age_group_filter(socket) do
     socket
     |> assign(:age_group_filter, "All")
-  end
-
-  def handle_event(
-        "age_group_filter",
-        %{"age_group_filter" => age_group_filter},
-        socket
-      ) do
-    {:noreply,
-     socket
-     |> assign_age_group_filter(age_group_filter)
-     |> assign_products_with_average_ratings()
-     |> update_chart()}
   end
 end

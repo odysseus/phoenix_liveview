@@ -7,22 +7,30 @@ defmodule Pento.SurveyFixtures do
   alias Pento.AccountsFixtures
   alias Pento.CatalogFixtures
 
+  def valid_demographic_attrs(attrs \\ %{}) do
+    user = AccountsFixtures.user_fixture()
+
+    Enum.into(attrs, %{
+      gender: "female",
+      year_of_birth: DateTime.utc_now().year - 22,
+      user_id: user.id
+    })
+  end
+
   @doc """
   Generate a demographic.
   """
   def demographic_fixture(attrs \\ %{}) do
-    user = AccountsFixtures.user_fixture()
-
     {:ok, demographic} =
       attrs
-      |> Enum.into(%{
-        gender: "male",
-        year_of_birth: 1999,
-        user_id: user.id
-      })
+      |> valid_demographic_attrs()
       |> Pento.Survey.create_demographic()
 
     demographic
+  end
+
+  def create_demographic(attrs \\ %{}) do
+    %{demographic: demographic_fixture(attrs)}
   end
 
   @doc """
@@ -42,5 +50,9 @@ defmodule Pento.SurveyFixtures do
       |> Pento.Survey.create_rating()
 
     rating
+  end
+
+  def create_rating(attrs \\ %{}) do
+    %{rating: rating_fixture(attrs)}
   end
 end

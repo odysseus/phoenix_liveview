@@ -13,11 +13,6 @@ defmodule PentoWeb.ProductLiveTest do
   }
   @invalid_attrs %{description: nil, name: nil, sku: nil, unit_price: nil}
 
-  defp create_product(_) do
-    product = product_fixture()
-    %{product: product}
-  end
-
   describe "Index" do
     setup [:create_product, :register_and_log_in_user]
 

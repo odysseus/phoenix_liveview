@@ -61,4 +61,8 @@ defmodule PentoWeb.ConnCase do
     |> Phoenix.ConnTest.init_test_session(%{})
     |> Plug.Conn.put_session(:user_token, token)
   end
+
+  def create_socket(_) do
+    %{socket: %Phoenix.LiveView.Socket{}}
+  end
 end
