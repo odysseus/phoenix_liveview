@@ -46,7 +46,8 @@ defmodule PentoWeb.ConnCase do
   """
   def register_and_log_in_user(%{conn: conn}) do
     user = Pento.AccountsFixtures.user_fixture()
-    %{conn: log_in_user(conn, user), user: user}
+    demographic = Pento.SurveyFixtures.demographic_fixture(%{user: user})
+    %{conn: log_in_user(conn, user), user: user, demographic: demographic}
   end
 
   @doc """

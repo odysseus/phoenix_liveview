@@ -3,7 +3,6 @@ defmodule Pento.AccountsFixtures do
   This module defines test helpers for creating
   entities via the `Pento.Accounts` context.
   """
-
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password(), do: "Exampl3P4ssw0rd!"
   def valid_password_reset(), do: "An0th3rV4lidP@ssword"

@@ -11,7 +11,7 @@ defmodule Pento.CatalogTest do
     @invalid_attrs %{description: nil, name: nil, sku: nil, unit_price: nil}
 
     test "list_products/0 returns all products" do
-      products = all_products_fixture(nil)
+      products = Enum.map(1..5, fn _ -> product_fixture() end)
       assert Catalog.list_products() == products
     end
 

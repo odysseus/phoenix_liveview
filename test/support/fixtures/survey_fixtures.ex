@@ -4,12 +4,7 @@ defmodule Pento.SurveyFixtures do
   entities via the `Pento.Survey` context.
   """
 
-  alias Pento.AccountsFixtures
-  alias Pento.CatalogFixtures
-
-  def valid_demographic_attrs(attrs \\ %{}) do
-    user = AccountsFixtures.user_fixture()
-
+  def valid_demographic_attrs(%{user: user} = attrs) do
     Enum.into(attrs, %{
       gender: "female",
       year_of_birth: DateTime.utc_now().year - 22,
@@ -20,7 +15,7 @@ defmodule Pento.SurveyFixtures do
   @doc """
   Generate a demographic.
   """
-  def demographic_fixture(attrs \\ %{}) do
+  def demographic_fixture(attrs) do
     {:ok, demographic} =
       attrs
       |> valid_demographic_attrs()
@@ -29,30 +24,30 @@ defmodule Pento.SurveyFixtures do
     demographic
   end
 
-  def create_demographic(attrs \\ %{}) do
+  def create_demographic(attrs) do
     %{demographic: demographic_fixture(attrs)}
+  end
+
+  def valid_rating_attrs(%{user: user, product: product} = attrs) do
+    Enum.into(attrs, %{
+      stars: 3,
+      user_id: user.id,
+      product_id: product.id
+    })
   end
 
   @doc """
   Generate a rating.
   """
-  def rating_fixture(attrs \\ %{}) do
-    user = AccountsFixtures.user_fixture()
-    product = CatalogFixtures.product_fixture()
-
+  def rating_fixture(attrs) do
     {:ok, rating} =
-      attrs
-      |> Enum.into(%{
-        stars: 3,
-        user_id: user.id,
-        product_id: product.id
-      })
+      valid_rating_attrs(attrs)
       |> Pento.Survey.create_rating()
 
     rating
   end
 
-  def create_rating(attrs \\ %{}) do
+  def create_rating(attrs) do
     %{rating: rating_fixture(attrs)}
   end
 end
