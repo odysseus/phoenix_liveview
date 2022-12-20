@@ -7,9 +7,9 @@ defmodule PentoWeb.SurveyResultsLiveTest do
   alias Phoenix.LiveView
 
   defp visit_page(%{conn: conn}) do
-    {:ok, survey_live, html} = live(conn, "/admin-dashboard")
+    {:ok, dashboard, html} = live(conn, "/admin-dashboard")
 
-    %{survey_live: survey_live, html: html}
+    %{dashboard: dashboard, html: html}
   end
 
   defp update_socket(socket) do
@@ -39,20 +39,32 @@ defmodule PentoWeb.SurveyResultsLiveTest do
       :create_demographic
     ]
 
-    test "generates ratings when no ratings exist", %{socket: socket} do
+    test "generates ratings when no ratings exist",
+         %{socket: socket, product: product} do
       {:ok, socket} = SurveyResultsLive.update(%{}, socket)
 
       assert socket.assigns.products_with_average_ratings ==
-               [{"Example Game", 0}]
+               [{product.name, 0}]
     end
 
     test "contains correct ratings when ratings exist",
-         %{socket: socket} = context do
+         %{socket: socket, product: product} = context do
       rating = rating_fixture(Map.put(context, :stars, 4))
       {:ok, socket} = SurveyResultsLive.update(%{}, socket)
 
       assert socket.assigns.products_with_average_ratings ==
-               [{"Example Game", rating.stars}]
+               [{product.name, rating.stars}]
+    end
+
+    test "averages ratings when more than one exists",
+         %{socket: socket, product: product} = context do
+      rating_fixture(context)
+      new_rating_fixture(%{product: product, stars: 5})
+
+      {:ok, socket} = SurveyResultsLive.update(%{}, socket)
+
+      assert socket.assigns.products_with_average_ratings ==
+               [{product.name, 4.0}]
     end
 
     test "assigns Contex dataset to :dataset key", %{socket: socket} do
@@ -110,8 +122,8 @@ defmodule PentoWeb.SurveyResultsLiveTest do
     ]
 
     test "has the correct title",
-         %{survey_live: survey_live, html: html} do
-      assert survey_live.module == PentoWeb.Admin.DashboardLive
+         %{dashboard: dashboard, html: html} do
+      assert dashboard.module == PentoWeb.Admin.DashboardLive
       assert html =~ "Admin Dashboard"
     end
 
@@ -128,13 +140,34 @@ defmodule PentoWeb.SurveyResultsLiveTest do
     end
 
     test "can change the age group filter",
-         %{survey_live: survey_live} do
+         %{dashboard: dashboard} do
       html =
-        survey_live
+        dashboard
         |> element("#age-group-select")
         |> render_change(%{age_group_filter: "50 and up"})
 
       assert html =~ ~r|<option value="50 and up" selected="selected"|
+    end
+
+    test "handles PubSub updates",
+         %{dashboard: dashboard, product: product} do
+      html =
+        dashboard
+        |> element(".exc-barlabel-in")
+        |> render()
+
+      assert html =~ "3.00"
+
+      new_rating_fixture(%{stars: 5, product: product})
+      send(dashboard.pid, %{event: "rating_created"})
+      :timer.sleep(10)
+
+      html =
+        dashboard
+        |> element(".exc-barlabel-in")
+        |> render()
+
+      assert html =~ "4.00"
     end
   end
 end
