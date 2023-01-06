@@ -16,10 +16,11 @@ defmodule Pento.Game.Pentomino do
   end
 
   def rotate(%{rotation: degrees} = p, direction \\ :right) do
-    rot = case direction do
-      :right -> 90
-      :left -> -90
-    end
+    rot =
+      case direction do
+        :right -> 90
+        :left -> -90
+      end
 
     %{p | rotation: rem(degrees + rot + 360, 360)}
   end
